@@ -8,12 +8,11 @@
 #ifndef SWIG_CGAL_APOLLONIUS_GRAPH_2_APOLLONIUS_GRAPH_2_H
 #define SWIG_CGAL_APOLLONIUS_GRAPH_2_APOLLONIUS_GRAPH_2_H
 
+
 #include <CGAL/config.h>
 
 #include <SWIG_CGAL/Kernel/typedefs.h>
 #include <SWIG_CGAL/Kernel/Point_2.h>
-// #include <SWIG_CGAL/Kernel/Segment_2.h>
-// #include <SWIG_CGAL/Kernel/Triangle_2.h>
 #include <SWIG_CGAL/Kernel/enum.h>
 #include <SWIG_CGAL/Common/Macros.h>
 #include <SWIG_CGAL/Common/Reference_wrapper.h>
@@ -76,7 +75,6 @@ public:
   SWIG_CGAL_FORWARD_CALL_1(bool,is_infinite,Vertex_handle)
   SWIG_CGAL_FORWARD_CALL_1(bool,is_infinite,Face_handle)
   SWIG_CGAL_FORWARD_CALL_2(bool,is_infinite,Face_handle,int)
-  // HERE: having problems with Edge
   SWIG_CGAL_FORWARD_CALL_1(bool,is_infinite,Edge)
 
 // Creation 

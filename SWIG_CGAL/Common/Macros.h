@@ -15,7 +15,18 @@
 #include <SWIG_CGAL/Common/triple.h>
 #include <CGAL/utility.h>
 #include <CGAL/assertions.h>
+
+#ifndef SWIG_CGAL_APOLLONIUS_GRAPH_2_OBJECT_H
+// Some SFINAE checks within is_iterator cause compilation errors
+// with clang
 #include <CGAL/is_iterator.h>
+#else
+namespace CGAL {
+  template <class T> struct is_iterator {
+    enum { value = false };
+  };
+}
+#endif
 
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
