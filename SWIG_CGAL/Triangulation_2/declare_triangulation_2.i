@@ -20,9 +20,29 @@
   %typemap(javaimports) SWIG_Triangulation_2::CGAL_Vertex_handle %{import CGAL.Kernel.POINT_TYPE;%}
   SWIG_CGAL_declare_identifier_of_template_class(CLASSNAME_PREFIX##_Vertex_handle,SWIG_Triangulation_2::CGAL_Vertex_handle<CPPTYPE,POINT_TYPE>)
 
+  // try to fix extraction of Face_handle from Edge:
+  // 
+  %typemap(out) SWIG_Triangulation_2::CGAL_Face_handle<CPPTYPE,POINT_TYPE> *std::pair< SWIG_Triangulation_2::CGAL_Face_handle<CPPTYPE,POINT_TYPE>,int >::first {
+    // here $result is a PyObject
+    // result is a pointer to a Face_handle, which we need to copy.
+    $1_type tmp  = new $*1_type();
+    tmp->deepcopy(*$1); // copy??
+    // pointer, type, flags
+    // $1_type gives something like SWIG_Triangulation_2::CGAL_Face_handle< CGAL_T2,Point_2 > *
+    // but SWIG_NewPointerObj expects SWIGTYPE_p_....
+    // this runs, but it's missing it's shadow class.
+    // not sure about SWIG_POINTER_OWN , vs SWIG_POINTER_NEW
+    $result = SWIG_NewPointerObj(SWIG_as_voidptr(tmp), 
+                                 $1_descriptor, 
+                                 SWIG_POINTER_OWN );
+  }
+  ///
+
   //Edge
   %include "std_pair.i"
   SWIG_CGAL_declare_identifier_of_template_class(CLASSNAME_PREFIX##_Edge,std::pair<SWIG_Triangulation_2::CGAL_Face_handle<CPPTYPE,POINT_TYPE>,int>)
+
+
 
   //Triangulations
   %typemap(javaimports)          Triangulation_2_wrapper%{import CGAL.Kernel.POINT_TYPE; import CGAL.Kernel.Ref_int; import CGAL.Kernel.Segment_2; import CGAL.Kernel.Triangle_2; import CGAL.Kernel.Oriented_side; import CGAL.Triangulation_2.Locate_type; import CGAL.Triangulation_2.Ref_Locate_type_2; import java.util.Iterator; import java.util.Collection;%}
