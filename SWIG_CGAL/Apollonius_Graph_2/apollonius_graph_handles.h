@@ -13,10 +13,55 @@
 
 namespace SWIG_Apollonius_Graph_2{
 
+
+// Sites
+template <class Apollonius_Graph,class Point>
+class CGAL_Site_2{
+  typename Apollonius_Graph::Site_2 data; // or should it have ::Data_structure::
+public:
+  typedef CGAL_Site_2<Apollonius_Graph,Point> Self;
+
+  CGAL_Site_2():data(){}
+
+  // trouble getting it to accept the first argument here -
+  CGAL_Site_2(const Point& p,double w):data(p.get_data(),w){}
+
+  #ifndef SWIG
+  typedef typename Apollonius_Graph::Site_2 cpp_base;
+  CGAL_Site_2(typename Apollonius_Graph::Site_2 v):data(v){}
+  const cpp_base& get_data() const {return data;}
+        cpp_base& get_data()       {return data;}
+  #endif
+
+  Point point() const { return data.point(); }
+  double weight() const { return data.weight(); }
+
+  //Operations - convenience
+  double x() const {return data.point().x();}
+  double y() const {return data.point().y();}
+
+  //I/O
+    std::string toString(){
+      std::stringstream sstr;
+      sstr << data;
+      return sstr.str();
+    }
+//  //Deep copy
+//  Self deepcopy() const {return Self(data);}
+//  void deepcopy(const Self& other){data=other.get_data();}
+};
+
+
+
+  // template arguments come from the line in CGAL_Apollonius_Graph_2.i
+  // Apollonius_Graph <= CGAL_AG2 <= CGAL::Apollonius_graph_2<CGAL_AG2_Traits>
+  // Point <= Point_2
 template <class Apollonius_Graph,class Point>
 
 class CGAL_Vertex_handle{
   typename Apollonius_Graph::Vertex_handle data;
+  // no difference
+  // typename Apollonius_Graph::Data_structure::Vertex_handle data;
 public:
   typedef CGAL_Vertex_handle<Apollonius_Graph,Point> Self;
   #ifndef SWIG
@@ -29,8 +74,13 @@ public:
   #ifndef SWIG
   CGAL_Vertex_handle(typename Apollonius_Graph::Vertex_handle v):data(v){}
   #endif
-//Access Functions  
-//  SWIG_CGAL_FORWARD_CALL_AND_REF_0(typename Apollonius_Graph::Site_2,site)
+//Access Functions -
+  // this fails because it can't find site() as a method of the handle.
+  // but it looks so similar to triangulation!
+  // SWIG_CGAL_FORWARD_CALL_AND_REF_0(typename Apollonius_Graph::Site_2,site)
+  // looking at the old apollonius code, it uses the handle like a smart ptr
+  // but this appears unable to 
+  CGAL_Site_2<Apollonius_Graph,Point> site(void) { return CGAL_Site_2<Apollonius_Graph,Point>(data->site()); }
 //Setting
   //  SWIG_CGAL_FORWARD_CALL_1(void,set_point,Point)
 //Equality functions  
@@ -89,43 +139,6 @@ public:
 //Deep copy
   Self deepcopy() const {return Self(data);}
   void deepcopy(const Self& other){data=other.get_data();}
-};
-
-// Sites
-template <class Apollonius_Graph,class Point>
-class CGAL_Site_2{
-  typename Apollonius_Graph::Site_2 data; // or should it have ::Data_structure::
-public:
-  typedef CGAL_Site_2<Apollonius_Graph,Point> Self;
-
-  CGAL_Site_2():data(){}
-
-  // trouble getting it to accept the first argument here -
-  CGAL_Site_2(const Point& p,double w):data(p.get_data(),w){}
-
-  #ifndef SWIG
-  typedef typename Apollonius_Graph::Site_2 cpp_base;
-  CGAL_Site_2(typename Apollonius_Graph::Site_2 v):data(v){}
-  const cpp_base& get_data() const {return data;}
-        cpp_base& get_data()       {return data;}
-  #endif
-
-  Point point() const { return data.point(); }
-  double weight() const { return data.weight(); }
-
-  //Operations - convenience
-  double x() const {return data.point().x();}
-  double y() const {return data.point().y();}
-
-  //I/O
-    std::string toString(){
-      std::stringstream sstr;
-      sstr << data;
-      return sstr.str();
-    }
-//  //Deep copy
-//  Self deepcopy() const {return Self(data);}
-//  void deepcopy(const Self& other){data=other.get_data();}
 };
 
 
