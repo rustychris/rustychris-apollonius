@@ -101,6 +101,38 @@ public:
   SWIG_CGAL_FORWARD_CALL_2(bool,is_edge,Vertex_handle,Vertex_handle)
   SWIG_CGAL_FORWARD_CALL_3(bool,is_face,Vertex_handle,Vertex_handle,Vertex_handle)
   SWIG_CGAL_FORWARD_CALL_1(bool,is_infinite,Edge)
+
+// Predicates
+  bool is_edge(Vertex_handle va, Vertex_handle vb, Reference_wrapper<Face_handle>& fr, Reference_wrapper<int>& i)
+  {
+    typename Face_handle::cpp_base base_f;
+    int base_i;
+    bool res = get_data().is_edge(va.get_data(), vb.get_data(), base_f, base_i);
+    fr.set(base_f);
+    i.set(base_i);
+    return res;
+  }
+
+  bool includes_edge(Vertex_handle va, Vertex_handle vb, Reference_wrapper<Vertex_handle>& vbr, Reference_wrapper<Face_handle>& fr, Reference_wrapper<int>& i)
+  {
+    typename Face_handle::cpp_base base_f;
+    typename Vertex_handle::cpp_base base_v;
+    int base_i;
+    bool res = get_data().includes_edge(va.get_data(), vb.get_data(), base_v, base_f, base_i);
+    fr.set(base_f);
+    vbr.set(base_v);
+    i.set(base_i);
+    return res;
+  }
+
+  bool is_face (Vertex_handle v1, Vertex_handle v2, Vertex_handle v3, Reference_wrapper<Face_handle>& fr)
+  {
+    typename Face_handle::cpp_base base_f;
+    bool res = get_data().is_face(v1.get_data(), v2.get_data(), v3.get_data(), base_f);
+    fr.set(base_f);
+    return res;
+  }
+
 // Queries
   SWIG_CGAL_FORWARD_CALL_1(Face_handle,locate,Point)
   SWIG_CGAL_FORWARD_CALL_AND_REF_2(Face_handle,locate,Point,Face_handle)
@@ -187,10 +219,12 @@ public:
       in >> get_data();
     }
   }
-//Deep copy (the inheritance is not a problem here, 
+//Deep copy
+  #ifndef CGAL_DO_NOT_DEFINE_FOR_ALPHA_SHAPE_2
   typedef Triangulation_2_wrapper<Triangulation,Point,Vertex_handle,Face_handle,Weighted_tag> Self;
   Self deepcopy() const {return Self(get_data());}
-  void deepcopy(const Self& other){*this=Self(other.get_data());}
+  void deepcopy(const Self& other){*this=Self(other.get_data());} // (the inheritance is not a problem here)
+  #endif
 //Special for SWIG
   bool same_internal_object(const Self& other) {return other.data_sptr.get()==data_sptr.get();}
 #endif
@@ -206,10 +240,6 @@ public:
 //   Geom_traits  t.geom_traits ()
 //   TriangulationDataStructure_2  t.tds ()
 //   TriangulationDataStructure_2 &  t.tds ()
-// Predicates
-//   bool  t.is_edge ( Vertex_handle va, Vertex_handle vb, Face_handle& fr, int & i)
-//   bool  t.includes_edge ( Vertex_handle va, Vertex_handle & vb, Face_handle& fr, int & i)
-//   bool  t.is_face ( Vertex_handle v1, Vertex_handle v2, Vertex_handle v3, Face_handle &fr)
 //I/O
 // ostream&  ostream& os << T  Inserts the triangulation t into the stream os.
 // istream&  istream& is >> T  Reads a triangulation from stream is and assigns it to t.
