@@ -71,22 +71,6 @@ SWIG_CGAL_declare_identifier_of_template_class(Constraint_input_iterator,Generic
 %include "SWIG_CGAL/Common/Object.i"
 #endif
 
- // This works, but only applies to the base class
-// %typemap(out) SWIG_Triangulation_2::CGAL_Face_handle< CGAL_T2,Point_2 > *std::pair< SWIG_Triangulation_2::CGAL_Face_handle< CGAL_T2,Point_2 >,int >::first {
-//   // here $result is a PyObject
-//   // result is a pointer to a Face_handle, which we need to copy.
-//   $1_type tmp  = new $*1_type();
-//   tmp->deepcopy(*$1); // copy??
-//   // pointer, type, flags
-//   // $1_type gives something like SWIG_Triangulation_2::CGAL_Face_handle< CGAL_T2,Point_2 > *
-//   // but SWIG_NewPointerObj expects SWIGTYPE_p_....
-//   // this runs, but it's missing it's shadow class.
-//   // not sure about SWIG_POINTER_OWN , vs SWIG_POINTER_NEW
-//   $result = SWIG_NewPointerObj(SWIG_as_voidptr(tmp), 
-//                                $1_descriptor, 
-//                                SWIG_POINTER_OWN );
-// }
-
 %import "SWIG_CGAL/Triangulation_2/declare_triangulation_2.i"
 SWIG_CGAL_declare_triangulation_2(Triangulation_2,CGAL_T2,Point_2,CGAL::Tag_false)
 
